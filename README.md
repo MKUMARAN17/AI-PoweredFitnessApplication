@@ -110,7 +110,7 @@ Docker: Containerization platform for easy deployment of dependencies.
 👨‍💻 Author
 Muthukumaran M
 
-🔗 LinkedIn: [Your LinkedIn Profile URL] (Consider adding this)
+🔗 LinkedIn: linkedin.com/in/muthukumaran-m-529026285
 
 💻 GitHub: MKUMARAN17
 
