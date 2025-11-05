@@ -6,12 +6,15 @@ In today's fast-paced world, maintaining fitness can be a challenge. This AI-pow
 
 ## 📌 Features
 
-- ✅ **User Authentication & Authorization** using **Keycloak**: Securely manages user access and permissions.
-- 🏃 **Fitness Activity Tracking** (Steps, Calories, Workout Duration): Comprehensive logging of user activities.
-- 🤖 **AI-Powered Recommendations** using **Google Gemini**: Delivers personalized workout and nutrition suggestions based on user data.
-- 📨 **Asynchronous Communication** via **RabbitMQ**: Ensures efficient, decoupled communication between services for real-time updates and notifications.
-- 🔒 **Secure REST APIs** with **Spring Security**: Protects all endpoints with industry-standard security practices.
-- ⚙️ **Microservice Architecture** for scalability and maintainability: Each core function is developed as an independent service, allowing for easier development, deployment, and scaling.
+✅ User Authentication & Authorization using Spring Security for secure role-based access control.
+
+🏃 Fitness Activity Tracking — logs user steps, calories, and workout duration.
+
+🤖 AI-Powered Recommendations through Google Gemini API to deliver personalized health and fitness suggestions.
+
+🔒 Secure REST APIs ensuring data protection and privacy across all microservices.
+
+⚙️ Microservice Architecture using Spring Boot & Spring Cloud for scalable and maintainable backend services.
 
 ---
 
