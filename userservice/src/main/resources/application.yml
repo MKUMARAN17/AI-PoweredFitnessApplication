@@ -1,5 +1,30 @@
+server:
+  port: 8081
+
 spring:
   application:
     name: user-service
-  config:
-    import: optional:configserver:http://localhost:8888
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/fitness_user_Db
+    username: root
+    password: Kumaran@6379
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+jwt:
+  secret: 5b4c6d7e8f9a0b1c2d3e4f5061728394a5b6c7d8e9f0a1b2c3d4e5f607182940
+  expiration: 900000           # 15 minutes in milliseconds
+  refresh-expiration: 604800000 # 7 days in milliseconds
+
+springdoc:
+  api-docs:
+    path: /docs
+  swagger-ui:
+    path: /swagger-ui.html

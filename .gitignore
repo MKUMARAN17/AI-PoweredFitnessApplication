@@ -1,0 +1,55 @@
+# Dependency directories
+**/node_modules/
+**/jspm_packages/
+
+# Maven/Java
+**/target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+# If you don't use an IDE that should manage it for you
+.mvn/wrapper/maven-wrapper.jar
+
+# Log files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+.DS_Store
+Thumbs.db
+
+# Build outputs
+dist/
+build/
+bin/
+out/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Optional: JUnit / test reports
+TEST-*.xml
+target/surefire-reports/
+target/failsafe-reports/
+
+# Temporary files
+tmp/
+temp/

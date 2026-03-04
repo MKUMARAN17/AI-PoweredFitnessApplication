@@ -1,5 +1,21 @@
+server:
+  port: 8083
+
 spring:
   application:
     name: ai-service
-  config:
-    import: optional:configserver:http://localhost:8888
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/fitnessrecommendation
+      database: fitnessrecommendation
+
+openai:
+  api:
+    url: ${OPENAI_API_URL:https://api.openai.com/v1/chat/completions}
+    key: ${OPENAI_API_KEY}
+
+springdoc:
+  api-docs:
+    path: /docs
+  swagger-ui:
+    path: /swagger-ui.html

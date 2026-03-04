@@ -1,0 +1,17 @@
+{
+    "name": "fitness-application-root",
+    "version": "1.0.0",
+    "description": "Root management for AI Fitness Application",
+    "scripts": {
+        "start:gateway": "gradlew.bat :gateway:bootRun",
+        "start:user": "gradlew.bat :userservice:bootRun",
+        "start:activity": "gradlew.bat :activityservice:bootRun",
+        "start:ai": "gradlew.bat :aiservice:bootRun",
+        "start:frontend": "cd frontend && npm run dev",
+        "clean": "gradlew.bat clean",
+        "dev": "concurrently -k -p \"[{name}]\" -n \"GATEWAY,USER,ACTIVITY,AI,FRONTEND\" -c \"green,magenta,cyan,white,red\" \"npm run start:gateway\" \"npm run start:user\" \"npm run start:activity\" \"npm run start:ai\" \"npm run start:frontend\""
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    }
+}

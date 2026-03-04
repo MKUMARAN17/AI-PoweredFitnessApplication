@@ -1,0 +1,3 @@
+// Root build file for FitnessApplication multi-module project.
+// Individual project builds are in subdirectories.
+// Plugin versions are centrally managed in settings.gradle pluginManagement block.

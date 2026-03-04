@@ -3,17 +3,62 @@ spring:
     name: api-gateway
   cloud:
     gateway:
-      server:
-        webflux:
-          routes:
-            - id: user-service
-              uri: lb://USER-SERVICE
-              predicates:
-                - Path=/api/users/**
-server:
-  port: 8080
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:5173"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            exposedHeaders: "Authorization"
+      routes:
+        - id: user-service-docs
+          uri: http://localhost:8081
+          predicates:
+            - Path=/user-service/docs
+          filters:
+            - RewritePath=/user-service/(?<path>.*), /$\{path}
+        - id: activity-service-docs
+          uri: http://localhost:8082
+          predicates:
+            - Path=/activity-service/docs
+          filters:
+            - RewritePath=/activity-service/(?<path>.*), /$\{path}
+        - id: ai-service-docs
+          uri: http://localhost:8083
+          predicates:
+            - Path=/ai-service/docs
+          filters:
+            - RewritePath=/ai-service/(?<path>.*), /$\{path}
+        - id: user-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/users/**
+        - id: activity-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/activities/**
+        - id: ai-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/recommendations/**
 
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+server:
+  port: 8090
+
+jwt:
+  secret: 5b4c6d7e8f9a0b1c2d3e4f5061728394a5b6c7d8e9f0a1b2c3d4e5f607182940
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: user-service
+        url: /user-service/docs
+      - name: activity-service
+        url: /activity-service/docs
+      - name: ai-service
+        url: /ai-service/docs

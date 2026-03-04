@@ -12,6 +12,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RecommendationService {
     private final RecommendationRepo repo;
+    private final OpenAiService openAiService;
 
     public List<Recommendation> getUserRecommendation(String userId) {
         return repo.findByUserId(userId);
@@ -19,6 +20,10 @@ public class RecommendationService {
 
     public Recommendation getActivityRecommendation(String activityId) {
         return repo.findByActivityId(activityId)
-                .orElseThrow(() -> new RuntimeException("No Recommendation for this activity" +activityId));
+                .orElseThrow(() -> new RuntimeException("No Recommendation for this activity" + activityId));
+    }
+
+    public String getChatResponse(String prompt) {
+        return openAiService.getAnswer(prompt);
     }
 }

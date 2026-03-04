@@ -1,6 +1,5 @@
 package com.fitness.activityservice.model;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +12,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 import java.util.Map;
-
 
 @Document(collection = "activities")
 @Data
@@ -30,11 +28,11 @@ public class Activity {
     private LocalDateTime startTime;
 
     @Field("metrics")
-    private Map<String,Object> additionMetrics;
+    private Map<String, Object> additionalMetrics;
 
-   @CreatedDate
+    @CreatedDate
     private LocalDateTime createdAt;
 
-   @LastModifiedDate
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 }

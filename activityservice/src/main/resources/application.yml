@@ -1,5 +1,16 @@
+server:
+  port: 8082
+
 spring:
   application:
     name: activity-service
-  config:
-    import: optional:configserver:http://localhost:8888
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/fitnessactivity
+      database: fitnessactivity
+
+springdoc:
+  api-docs:
+    path: /docs
+  swagger-ui:
+    path: /swagger-ui.html

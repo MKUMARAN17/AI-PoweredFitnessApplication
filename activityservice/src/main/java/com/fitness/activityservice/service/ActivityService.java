@@ -6,10 +6,8 @@ import com.fitness.activityservice.model.Activity;
 import com.fitness.activityservice.repo.ActivityRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,50 +17,39 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ActivityService {
 
-    @Autowired
     private final ActivityRepo activityRepo;
-    @Autowired
-    private UserValidationService userValidationService;
-    @Autowired
-    private final RabbitTemplate rabbitTemplate;
+    private final WebClient aiServiceWebClient;
 
-    @Value("${rabbitmq.exchange.name}")
-    private String exchange;
+    public ActivityResponse trackActivity(String userId, ActivityRequest request) {
 
-    @Value("${rabbitmq.routing.key}")
-    private String routingkey;
-
-    public ActivityResponse traceActivity(ActivityRequest request) {
-
-        boolean isValidUser = userValidationService.validateUser(request.getUserId());
-        if(!isValidUser){
-            throw new RuntimeException("Invalid User:" + request.getUserId());
-        }
-
-        Activity activity= Activity.builder()
-                .userId(request.getUserId())
+        Activity activity = Activity.builder()
+                .userId(userId)
                 .type(request.getType())
                 .duration(request.getDuration())
                 .caloriesBurned(request.getCaloriesBurned())
                 .startTime(request.getStartTime())
-                .additionMetrics(request.getAdditionalMetrics())
+                .additionalMetrics(request.getAdditionalMetrics())
                 .build();
 
-        Activity saveActivity = activityRepo.save(activity);
+        Activity savedActivity = activityRepo.save(activity);
 
-        //publish to rabbitmq for ai process
-
-        try{
-
-            rabbitTemplate.convertAndSend(exchange, routingkey, saveActivity);
+        // Call AI service to process activity and generate recommendation
+        try {
+            aiServiceWebClient.post()
+                    .uri("/api/recommendations/process")
+                    .bodyValue(savedActivity)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .subscribe(result -> log.info("AI Service response: {}", result),
+                            err -> log.error("Error calling AI Service: {}", err.getMessage()));
         } catch (Exception e) {
-            log.error("Failed to publish activity to RabbitMq: ",e);
+            log.error("Failed to notify AI Service: {}", e.getMessage());
         }
-        return mapToResponse(saveActivity);
 
+        return mapToResponse(savedActivity);
     }
 
-    private ActivityResponse mapToResponse(Activity activity){
+    private ActivityResponse mapToResponse(Activity activity) {
         ActivityResponse response = new ActivityResponse();
         response.setId(activity.getId());
         response.setUserId(activity.getUserId());
@@ -70,11 +57,10 @@ public class ActivityService {
         response.setDuration(activity.getDuration());
         response.setCaloriesBurned(activity.getCaloriesBurned());
         response.setStartTime(activity.getStartTime());
-        response.setAdditionMetrics(activity.getAdditionMetrics());
+        response.setAdditionalMetrics(activity.getAdditionalMetrics());
         response.setCreatedAt(activity.getCreatedAt());
         response.setUpdatedAt(activity.getUpdatedAt());
         return response;
-
     }
 
     public List<ActivityResponse> getUserActivity(String userId) {
@@ -87,6 +73,6 @@ public class ActivityService {
     public ActivityResponse getActivityById(String activityId) {
         return activityRepo.findById(activityId)
                 .map(this::mapToResponse)
-                .orElseThrow(() -> new RuntimeException("Activity not found with id" + activityId));
+                .orElseThrow(() -> new RuntimeException("Activity not found with id: " + activityId));
     }
 }
