@@ -1,31 +1,50 @@
-# 🏋️‍♂️ AI-Powered Fitness Application (Backend)
+# 🏋️‍♂️ AI-Powered Fitness Application
 
-In today's fast-paced world, maintaining fitness can be a challenge. This AI-powered fitness application aims to provide users with intelligent tracking and personalized recommendations to help them achieve their health goals. This repository contains the backend implementation, developed using a **Spring Boot microservices architecture** to ensure scalability, resilience, and ease of maintenance. The application leverages modern technologies like Keycloak for robust security, RabbitMQ for efficient asynchronous communication, and the Google Gemini API for intelligent fitness insights.
+Welcome to the AI-Powered Fitness Application! This project provides users with intelligent tracking and personalized fitness recommendations to help them achieve their health goals. It features a robust **Spring Boot microservices architectecture** on the backend and a modern **React + Vite** application on the frontend. The application uses JWT for secure authentication, MySQL and MongoDB for fast data storage, and the **OpenAI API** / **Google Gemini API** for intelligent fitness insights.
 
 ---
 
 ## 📌 Features
 
-- ✅ **User Authentication & Authorization** using **Keycloak**: Securely manages user access and permissions.
-- 🏃 **Fitness Activity Tracking** (Steps, Calories, Workout Duration): Comprehensive logging of user activities.
-- 🤖 **AI-Powered Recommendations** using **Google Gemini**: Delivers personalized workout and nutrition suggestions based on user data.
-- 📨 **Asynchronous Communication** via **RabbitMQ**: Ensures efficient, decoupled communication between services for real-time updates and notifications.
-- 🔒 **Secure REST APIs** with **Spring Security**: Protects all endpoints with industry-standard security practices.
-- ⚙️ **Microservice Architecture** for scalability and maintainability: Each core function is developed as an independent service, allowing for easier development, deployment, and scaling.
+- ✅ **User Authentication & Authorization**: Custom JWT-based authentication with Refresh Token support via Spring Cloud Gateway.
+- 🏃 **Fitness Activity Tracking**: Comprehensive logging of user activities (Steps, Calories, Workout Duration) per user.
+- 🤖 **AI-Powered Recommendations**: Delivers personalized workout and nutrition suggestions based on user data using external Large Language Models (LLMs).
+- 🔒 **Secure REST APIs**: Protects endpoints with industry-standard security practices and Gateway-level JWT filtering.
+- ⚙️ **Microservice Architecture**: Decoupled backend services for Auth/Users, Activities, AI Recommendations, and an API Gateway for routing.
+- 🎨 **Modern Frontend**: Responsive and dynamic user interface built with React, Tailwind CSS, and Framer Motion.
 
 ---
 
 ## 📂 Project Structure
 
+```text
 AI-PoweredFitnessApplication/
 │
-├── activity-service/ --> Handles fitness activity logic (e.g., adding, retrieving activity logs)
-├── auth-service/ --> Manages Keycloak authentication, user registration, and token management
-├── ai-service/ --> Integrates with the Google Gemini API for generating intelligent recommendations
-├── notification-service/ --> Manages message publishing and listening with RabbitMQ for asynchronous user updates
-├── common-utils/ --> Contains shared resources, utilities, and models across all services
-└── README.md --> This file
+├── frontend/             --> React + Vite frontend application (running on port 5173)
+├── gateway/              --> Spring Cloud API Gateway handling routing and JWT validation (port 8090)
+├── userservice/          --> Manages user accounts, profiles, and JWT authentication (port 8081)
+├── activityservice/      --> Handles fitness activity logs and metrics (port 8082)
+├── aiservice/            --> Integrates with LLMs for generating intelligent recommendations (port 8083)
+└── README.md             --> This file
+```
 
+---
+
+## 🧰 Tech Stack
+
+**Frontend Framework & Libraries:**
+- React 19, Vite, Tailwind CSS 4, Framer Motion, Axios, React Router v7
+
+**Backend Languages & Frameworks:**
+- Java 21, Spring Boot 3.4.x, Spring Cloud Gateway
+
+**Databases:**
+- **MySQL 8**: Relational storage for User Accounts and Authentication data (`userservice`).
+- **MongoDB**: NoSQL storage for flexible Activity Logs (`activityservice`) and AI suggestions (`aiservice`).
+
+**Security & External APIs:**
+- JSON Web Tokens (JJWT)
+- OpenAI API (or Google Gemini API)
 
 ---
 
@@ -33,10 +52,12 @@ AI-PoweredFitnessApplication/
 
 ### Prerequisites
 
--   **Java 17 or higher**: The runtime environment for Spring Boot applications.
--   **Maven 3.6+**: For building and managing project dependencies.
--   **Docker**: Essential for easily running RabbitMQ and optionally Keycloak.
--   **Google Gemini API Key**: Required for the AI-powered recommendation service.
+- **Java 21**: The runtime environment for the backend services.
+- **Node.js (v18+) and npm**: Core runtime for running the frontend Vite server.
+- **Gradle**: For building and managing backend dependencies.
+- **MySQL Server**: Running on `localhost:3306`. Create a database named `fitness_user_Db`.
+- **MongoDB**: Running on `localhost:27017`.
+- **OpenAI/Gemini API Key**: Required for the AI-powered recommendation service.
 
 ---
 
@@ -45,94 +66,81 @@ AI-PoweredFitnessApplication/
 #### 1. Clone the Repository
 
 ```bash
-git clone [https://github.com/](https://github.com/)[YOUR_USERNAME]/AI-PoweredFitnessApplication.git
+git clone https://github.com/MKUMARAN17/AI-PoweredFitnessApplication.git
 cd AI-PoweredFitnessApplication
-2. Start RabbitMQ in Docker
-Bash
+```
 
-docker run -d --hostname rabbitmq --name rabbitmq \
-  -p 5672:5672 -p 15672:15672 rabbitmq:3-management
-This command starts a RabbitMQ container with the management plugin enabled, accessible via http://localhost:15672.
+#### 2. Configure Databases
+Ensure that your local **MySQL** server has a database named `fitness_user_Db` with the root user credentials (or update them in the `userservice/src/main/resources/application.yml`).
+Ensure that your local **MongoDB** is running on the default port (`27017`).
 
-3. Configure Environment Variables
-Create a .env file in the root directory of the project, or configure these variables directly in your IDE's run configurations:
+#### 3. Configure Environment Variables
+If required, configure these variables directly in your IDE's run configurations or export them:
+- `OPENAI_API_KEY`: Set this to your valid OpenAI/Gemini API key for the AI Service.
 
-GOOGLE_GEMINI_API_KEY=[YOUR_GOOGLE_GEMINI_API_KEY]
-KEYCLOAK_SERVER_URL=http://localhost:8080
-RABBITMQ_HOST=localhost
-4. Build and Run Each Service
-Navigate to each service directory and use Maven to start them. You will need to run each service in a separate terminal window or process.
+#### 4. Build and Run Backend Services
+Navigate to each service directory and use Gradle to start them. You can run each in a separate terminal:
 
-Bash
+```bash
+# Start User Service
+cd userservice
+./gradlew bootRun
 
-cd activity-service
-mvn spring-boot:run
-Repeat for each of the following:
+# Start Activity Service
+cd ../activityservice
+./gradlew bootRun
 
-auth-service
+# Start AI Service
+cd ../aiservice
+export OPENAI_API_KEY="your_api_key_here"  # Provide your valid key
+./gradlew bootRun
 
-ai-service
+# Start API Gateway (Must run on port 8090)
+cd ../gateway
+./gradlew bootRun
+```
 
-notification-service
+#### 5. Build and Run Frontend
+The frontend requires Node modules to be installed first.
 
-📬 API Overview
-Auth Service
-POST /auth/register – Register a new user account.
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-POST /auth/login – Authenticate and retrieve an access token for subsequent API calls.
+The frontend application should now be accessible at `http://localhost:5173`.
 
-Activity Service
-POST /activities/add – Add a new fitness activity record (e.g., steps, calories burned, workout duration).
+---
 
-GET /activities/user/{userId} – Retrieve all activity logs for a specific user.
+## 📬 API Overview (Through API Gateway)
 
-AI Service
-POST /ai/suggestions – Generate personalized workout suggestions or nutritional advice based on user data.
+The API Gateway runs on `localhost:8090` and routes traffic to the backend services.
 
-Notification Service
-This service primarily functions as a RabbitMQ listener for user updates and messages, enabling asynchronous processing of notifications and internal service communications.
+- **Auth & Users (`/api/users/**`)**
+  - Directed to `userservice`.
+  - Registration, Login, and fetching user data. Includes JWT generation.
+  
+- **Activities (`/api/activities/**`)**
+  - Directed to `activityservice`.
+  - Add and retrieve fitness activity logs for users.
 
-🧰 Tech Stack
-Java 17: Core programming language.
+- **AI Recommendations (`/api/recommendations/**`)**
+  - Directed to `aiservice`.
+  - Generate personalized workout and AI Coach suggestions based on user context.
 
-Spring Boot: Framework for building robust, production-ready applications.
+---
 
-Spring Security + Keycloak: For comprehensive authentication and authorization.
+## 👨‍💻 Author
 
-RabbitMQ: Message broker for asynchronous communication.
+**Muthukumaran M**
+- 💻 GitHub: [MKUMARAN17](https://github.com/MKUMARAN17)
 
-Google Gemini API: For AI-powered recommendations.
-
-Maven: Project management and build automation tool.
-
-Docker: Containerization platform for easy deployment of dependencies.
-
-👨‍💻 Author
-Muthukumaran M
-
-🔗 LinkedIn: [Your LinkedIn Profile URL] (Consider adding this)
-
-💻 GitHub: MKUMARAN17
-
-📜 License
+## 📜 License
 This project is licensed under the MIT License. See the LICENSE file for more details.
 
-🙌 Acknowledgements
-Spring Boot: For simplifying Java development.
-
-Keycloak: For open-source identity and access management.
-
-Google Gemini: For powerful AI capabilities.
-
-RabbitMQ: For reliable messaging.
-
-🚀 Future Enhancements
-We are continuously working to improve this application. Planned enhancements include:
-
-Integration of Swagger/OpenAPI documentation for all REST APIs.
-
-A Docker Compose file for simplified one-command deployment of all services and dependencies.
-
-Details and setup instructions for the frontend repository once available.
-
-Additional AI models for more diverse recommendations (e.g., diet plans, recovery tips).
+## 🙌 Acknowledgements
+- **Spring Boot & Spring Cloud**: For simplifying microservices construction.
+- **React & Vite**: For lightning-fast frontend development.
+- **Tailwind CSS**: For effortless utility-first styling.
+- **OpenAI / Google Gemini**: For powerful AI capabilities.
