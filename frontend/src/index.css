@@ -46,15 +46,15 @@
 }
 
 @utility card {
-  @apply bg-[#161B22]/60 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-3xl p-6 transition-all duration-300 hover:border-sky-500/30 hover:shadow-sky-500/10 hover:shadow-[0_0_15px_rgba(14, 165, 233, 0.1)];
+  @apply bg-[#161B22]/60 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-3xl p-6 transition-all duration-300 hover:border-sky-500/30 hover:shadow-sky-500/10 hover:shadow-[0_0_15px_rgba(14,165,233,0.1)];
 }
 
 @utility btn-primary {
-  @apply relative overflow-hidden bg-sky-600 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg shadow-sky-600/20 hover:shadow-sky-600/40 hover:shadow-[0_0_20px_rgba(14, 165, 233, 0.4)] flex items-center justify-center gap-2;
+  @apply relative overflow-hidden bg-sky-600 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg shadow-sky-600/20 hover:shadow-sky-600/40 hover:shadow-[0_0_20px_rgba(14,165,233,0.4)] flex items-center justify-center gap-2;
 }
 
 @utility btn-outline {
-  @apply border border-white/10 px-6 py-3 rounded-xl font-bold transition-all duration-300 hover:bg-white/5 hover:border-white/20 hover:shadow-[0_0_15px_rgba(255, 255, 255, 0.05)] flex items-center justify-center gap-2;
+  @apply border border-white/10 px-6 py-3 rounded-xl font-bold transition-all duration-300 hover:bg-white/5 hover:border-white/20 hover:shadow-[0_0_15px_rgba(255,255,255,0.05)] flex items-center justify-center gap-2;
 }
 
 /* Custom Scrollbar */
@@ -90,7 +90,7 @@
 }
 
 @utility shadow-glow {
-  @apply shadow-[0_0_20px_rgba(14, 165, 233, 0.3)];
+  @apply shadow-[0_0_20px_rgba(14,165,233,0.3)];
 }
 
 @utility ai-gradient {
