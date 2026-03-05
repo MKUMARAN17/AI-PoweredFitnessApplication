@@ -55,7 +55,7 @@ tmp/
 temp/
 
 # Gradle
-.gradle/
+**/.gradle/
 
 # Logs and debug files
 gitlog.txt

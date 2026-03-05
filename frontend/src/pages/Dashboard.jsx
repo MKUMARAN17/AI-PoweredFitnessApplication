@@ -30,9 +30,9 @@ const Dashboard = () => {
     }, [user]);
 
     const stats = [
-        { label: 'Steps Today', value: '8,432', icon: Activity, color: 'text-blue-400' },
+        { label: 'Steps Today', value: '8,432', icon: Activity, color: 'text-sky-400' },
         { label: 'Calories', value: '450 kcal', icon: Flame, color: 'text-orange-400' },
-        { label: 'Workout', value: '45 min', icon: Clock, color: 'text-green-400' },
+        { label: 'Workout', value: '45 min', icon: Clock, color: 'text-cyan-400' },
     ];
 
     return (

@@ -1,0 +1,29 @@
+[project]
+name = "fitness-ai-coach"
+version = "0.1.0"
+description = "Local fine-tuned fitness coach with RAG and multi-turn memory."
+readme = "TRAINING_GUIDE.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "langgraph==0.2.53",
+    "langchain-core==0.3.25",
+    "torch==2.5.1+cpu",
+    "transformers==4.46.3",
+    "peft==0.14.0",
+    "accelerate==1.2.1",
+    "sentence-transformers==3.3.1",
+    "chromadb==0.5.23",
+    "pymongo==4.10.1",
+    "fastapi==0.115.5",
+    "uvicorn[standard]==0.32.1",
+    "pydantic==2.10.3",
+    "python-dotenv==1.0.1",
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }

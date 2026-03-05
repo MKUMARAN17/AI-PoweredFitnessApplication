@@ -9,10 +9,12 @@ spring:
       uri: mongodb://localhost:27017/fitnessrecommendation
       database: fitnessrecommendation
 
-openai:
-  api:
-    url: ${OPENAI_API_URL:https://api.openai.com/v1/chat/completions}
-    key: ${OPENAI_API_KEY}
+# ── Local AI Model (replaces OpenAI / Gemini) ────────────────────────────────
+# The Python FastAPI server in ai_model/main.py runs here.
+# Start it with: cd ai_model && python main.py
+local:
+  ai:
+    url: ${LOCAL_AI_URL:http://localhost:8085}
 
 springdoc:
   api-docs:

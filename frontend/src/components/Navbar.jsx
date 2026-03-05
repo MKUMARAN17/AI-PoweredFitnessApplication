@@ -28,7 +28,7 @@ const Navbar = () => {
                         className={`flex flex-col items-center gap-1.5 transition-all duration-300 group ${isActive ? 'text-primary scale-110' : 'text-slate-400 hover:text-white'
                             }`}
                     >
-                        <div className={`p-2 rounded-xl transition-all duration-300 ${isActive ? 'bg-primary/10 shadow-[0_0_20px_rgba(139,92,246,0.2)]' : 'group-hover:bg-white/5'}`}>
+                        <div className={`p-2 rounded-xl transition-all duration-300 ${isActive ? 'bg-primary/10 shadow-[0_0_20px_rgba(14,165,233,0.2)]' : 'group-hover:bg-white/5'}`}>
                             <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />
                         </div>
                         <span className={`text-[10px] font-bold uppercase tracking-widest transition-all ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>{item.label}</span>

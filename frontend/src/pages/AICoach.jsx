@@ -23,14 +23,31 @@ const AICoach = () => {
 
         try {
             const res = await aiService.getSuggestions({
-                userId: user.id,
-                prompt: userMsg
+                userId: user?.id,
+                prompt: userMsg,
+                // You can add more context here if your user object has it, e.g. goal: user.goal
             });
-            setMessages(prev => [...prev, { role: 'ai', content: res.data.message || res.data.suggestion || "Here's your plan!" }]);
+            setMessages(prev => [...prev, { role: 'ai', content: res.data.response || res.data.message || "I've analyzed your data and updated your plan!" }]);
         } catch (err) {
-            setMessages(prev => [...prev, { role: 'ai', content: "I'm having trouble connecting to my brain right now. Please try again in a moment!" }]);
+            setMessages(prev => [...prev, { role: 'ai', content: "I'm having trouble connecting to my brain right now. Please make sure the Local AI service is running!" }]);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleClearChat = async () => {
+        if (!window.confirm("Do you want to clear your conversation history with Alex?")) return;
+
+        try {
+            // This calls our new endpoint: DELETE /api/ai/memory/{userId}
+            // Note: You'll need to add clearChat to aiService in api.js if you want a dedicated method,
+            // or just use api.delete directly.
+            await api.delete(`/api/recommendations/memory/${user.id}`);
+            setMessages([{ role: 'ai', content: `History cleared! Hello again ${user?.username}. What's on your mind today?` }]);
+        } catch (err) {
+            console.error("Failed to clear history", err);
+            // Fallback for UI if it fails
+            setMessages([{ role: 'ai', content: `Hello ${user?.username}! I'm fresh and ready to help. What's our focus today?` }]);
         }
     };
 
@@ -43,18 +60,26 @@ const AICoach = () => {
 
     return (
         <div className="max-w-4xl mx-auto px-6 pt-12 pb-40 h-[calc(100vh-80px)] flex flex-col">
-            <header className="flex items-center gap-6 mb-12 relative">
-                <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
-                <div className="p-4 bg-primary rounded-3xl shadow-glow relative">
-                    <BrainCircuit size={32} className="text-white" />
-                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full border-4 border-slate-900"></div>
+            <header className="flex items-center justify-between gap-6 mb-12 relative">
+                <div className="flex items-center gap-6">
+                    <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+                    <div className="p-4 bg-primary rounded-3xl shadow-glow relative">
+                        <BrainCircuit size={32} className="text-white" />
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full border-4 border-slate-900"></div>
+                    </div>
+                    <div>
+                        <h1 className="text-4xl font-bold tracking-tighter">FitAI <span className="gradient-text">Coach</span></h1>
+                        <p className="text-slate-400 text-sm font-medium flex items-center gap-2">
+                            <Sparkles size={14} className="text-[#38BDF8]" /> Alex is ready to help
+                        </p>
+                    </div>
                 </div>
-                <div>
-                    <h1 className="text-4xl font-bold tracking-tighter">FitAI <span className="gradient-text">Coach</span></h1>
-                    <p className="text-slate-400 text-sm font-medium flex items-center gap-2">
-                        <Sparkles size={14} className="text-[#10B981]" /> Online & ready to help
-                    </p>
-                </div>
+                <button
+                    onClick={handleClearChat}
+                    className="px-4 py-2 rounded-xl border border-white/10 text-xs font-medium hover:bg-white/5 transition-colors text-slate-400"
+                >
+                    Reset Chat
+                </button>
             </header>
 
 

@@ -1,0 +1,75 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# Fitness AI Coach — Dependencies
+# Hardware: i5-12500H, 16GB RAM, CPU-only (no NVIDIA GPU)
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ── LangGraph ────────────────────────────────────────────────────────────────
+langgraph==0.2.53
+langchain-core==0.3.25
+
+# ── HuggingFace (fine-tuned model inference) ─────────────────────────────────
+# CPU-only PyTorch — much smaller download than CUDA version
+torch==2.5.1
+# If you train on Colab/GPU, download and copy model weights to ai_model/models/
+# DO NOT pip install the cuda version on this machine — it needs 16GB+ VRAM
+
+transformers==4.47.1
+peft==0.14.0               # LoRA adapter loading
+accelerate==1.2.1          # device_map support
+
+# ── GGUF inference (RECOMMENDED FOR CPU — much faster than HuggingFace) ──────
+# GGUF models use ~4-bit quantization and run comfortably with 16GB RAM
+# Install: pip install llama-cpp-python
+# Download GGUF model from HuggingFace (TheBloke) and set FITNESS_GGUF_PATH in .env
+# llama-cpp-python==0.3.1     # Uncomment after downloading a GGUF model
+
+# ── Training dependencies (only needed if fine-tuning locally) ────────────────
+# Fine-tuning Mistral-7B requires 12GB+ VRAM — train on Colab, not this machine
+# trl==0.13.0                # SFTTrainer for supervised fine-tuning
+# bitsandbytes==0.45.0       # 4-bit QLoRA quantization (GPU only)
+# datasets==3.2.0            # HuggingFace datasets
+
+# ── Embeddings & vector store ─────────────────────────────────────────────────
+sentence-transformers==3.3.1   # all-MiniLM-L6-v2 for ChromaDB embeddings
+chromadb==0.5.23               # Local vector store for RAG
+
+# ── Database (conversation memory) ───────────────────────────────────────────
+pymongo==4.10.1
+
+# ── API server ────────────────────────────────────────────────────────────────
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+pydantic==2.10.3
+python-dotenv==1.0.1
+
+# ═══════════════════════════════════════════════════════════════════════════
+# INSTALLATION STEPS for your laptop (i5-12500H, 16GB RAM)
+# ═══════════════════════════════════════════════════════════════════════════
+# 1. Open a terminal in ai_model/
+#
+# 2. Create a virtual environment:
+#    python -m venv venv
+#    venv\Scripts\activate
+#
+# 3. Install CPU-only PyTorch (faster/smaller download):
+#    pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cpu
+#
+# 4. Install remaining packages:
+#    pip install -r requirements.txt
+#
+# 5. (OPTIONAL, FASTER) Install llama-cpp for GGUF inference:
+#    pip install llama-cpp-python
+#    Download TinyLlama GGUF from:
+#    https://huggingface.co/TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF
+#    Set FITNESS_GGUF_PATH in .env
+#
+# 6. Start the server:
+#    python main.py
+#
+# ── TRAINING (do this on Google Colab, not on this laptop) ─────────────────
+# Colab T4 GPU training:
+#   pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/cu121
+#   pip install trl==0.13.0 bitsandbytes==0.45.0 datasets==3.2.0 peft==0.14.0 transformers accelerate
+#   cd ai_model && python -m training.train --merge
+# Download models/fitness-coach-merged/ and copy to this machine
+# ═══════════════════════════════════════════════════════════════════════════

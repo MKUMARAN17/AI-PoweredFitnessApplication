@@ -5,9 +5,9 @@
   --font-heading: "Outfit", sans-serif;
   --font-body: "Plus Jakarta Sans", sans-serif;
 
-  --color-primary: #8B5CF6;
-  --color-secondary: #EC4899;
-  --color-accent: #10B981;
+  --color-primary: #0EA5E9;
+  --color-secondary: #22D3EE;
+  --color-accent: #38BDF8;
   --color-background-custom: #0D1117;
   --color-surface: #161B22;
   --color-text-main: #F0F6FC;
@@ -18,10 +18,10 @@
   body {
     @apply bg-background-custom text-text-main font-body antialiased;
     background-image:
-      radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.15) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
-      radial-gradient(at 0% 100%, rgba(139, 92, 246, 0.1) 0px, transparent 50%);
+      radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(34, 211, 238, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.1) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(14, 165, 233, 0.1) 0px, transparent 50%);
     background-attachment: fixed;
     min-height: 100vh;
     margin: 0;
@@ -42,19 +42,19 @@
 }
 
 @utility gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-violet-400 via-fuchsia-400 to-emerald-400;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-cyan-400 to-blue-400;
 }
 
 @utility card {
-  @apply bg-[#161B22]/60 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-3xl p-6 transition-all duration-300 hover:border-violet-500/30 hover:shadow-violet-500/10;
+  @apply bg-[#161B22]/60 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-3xl p-6 transition-all duration-300 hover:border-sky-500/30 hover:shadow-sky-500/10 hover:shadow-[0_0_15px_rgba(14, 165, 233, 0.1)];
 }
 
 @utility btn-primary {
-  @apply relative overflow-hidden bg-violet-600 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg shadow-violet-600/20 hover:shadow-violet-600/40 flex items-center justify-center gap-2;
+  @apply relative overflow-hidden bg-sky-600 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg shadow-sky-600/20 hover:shadow-sky-600/40 hover:shadow-[0_0_20px_rgba(14, 165, 233, 0.4)] flex items-center justify-center gap-2;
 }
 
 @utility btn-outline {
-  @apply border border-white/10 px-6 py-3 rounded-xl font-bold transition-all duration-300 hover:bg-white/5 hover:border-white/20 flex items-center justify-center gap-2;
+  @apply border border-white/10 px-6 py-3 rounded-xl font-bold transition-all duration-300 hover:bg-white/5 hover:border-white/20 hover:shadow-[0_0_15px_rgba(255, 255, 255, 0.05)] flex items-center justify-center gap-2;
 }
 
 /* Custom Scrollbar */
@@ -87,4 +87,16 @@
 
 .animate-float {
   animation: float 3s ease-in-out infinite;
+}
+
+@utility shadow-glow {
+  @apply shadow-[0_0_20px_rgba(14, 165, 233, 0.3)];
+}
+
+@utility ai-gradient {
+  @apply bg-gradient-to-br from-sky-400/20 via-cyan-400/10 to-blue-500/20;
+}
+
+@utility glass-dark {
+  @apply bg-[#0D1117]/80 backdrop-blur-3xl border border-white/5 shadow-2xl;
 }

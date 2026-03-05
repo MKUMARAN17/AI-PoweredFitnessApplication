@@ -5,41 +5,73 @@ import com.fitness.aiservice.model.Recommendation;
 import com.fitness.aiservice.service.ActivityMessageListener;
 import com.fitness.aiservice.service.RecommendationService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
+/**
+ * REST controller for AI recommendations.
+ *
+ * All AI calls now go to the local Python service (port 8085),
+ * not OpenAI or Gemini — no API key needed.
+ */
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/api/recommendations")
 public class RecommendationController {
+
     private final RecommendationService service;
     private final ActivityMessageListener activityMessageListener;
 
     @GetMapping("/user")
-    public ResponseEntity<List<Recommendation>> getUserRecommendation(@RequestHeader("X-User-Id") String userId) {
+    public ResponseEntity<List<Recommendation>> getUserRecommendation(
+            @RequestHeader("X-User-Id") String userId) {
         return ResponseEntity.ok(service.getUserRecommendation(userId));
     }
 
     @GetMapping("/activity/{activityId}")
-    public ResponseEntity<Recommendation> getActivityRecommendation(@PathVariable String activityId) {
+    public ResponseEntity<Recommendation> getActivityRecommendation(
+            @PathVariable String activityId) {
         return ResponseEntity.ok(service.getActivityRecommendation(activityId));
     }
 
+    /**
+     * Unified endpoint for:
+     * - Chat messages from AICoach page → { "prompt": "...", "userId": "...",
+     * "goal": "..." }
+     * - Activity processing → { "id": "...", "userId": "...", "type": "...", ... }
+     */
     @PostMapping("/process")
-    public ResponseEntity<Map<String, String>> processActivity(@RequestBody Map<String, Object> requestBody) {
+    public ResponseEntity<Map<String, String>> processActivity(
+            @RequestBody Map<String, Object> requestBody,
+            @RequestHeader(value = "X-User-Id", required = false) String headerUserId) {
+
+        Map<String, String> responseBody = new HashMap<>();
+
         if (requestBody.containsKey("prompt")) {
-            // It's a direct chat message from the user
+            // ── Chat message from AICoach page ────────────────────────────
             String prompt = (String) requestBody.get("prompt");
-            String response = service.getChatResponse(prompt);
-            Map<String, String> responseBody = new HashMap<>();
+
+            // Resolve userId: prefer request body, fall back to header
+            String userId = requestBody.containsKey("userId")
+                    ? (String) requestBody.get("userId")
+                    : (headerUserId != null ? headerUserId : "anonymous");
+
+            String goal = requestBody.containsKey("goal")
+                    ? (String) requestBody.get("goal")
+                    : "MAINTENANCE";
+
+            log.info("Chat request from user {} (goal={}): {}", userId, goal, prompt);
+            String response = service.getChatResponse(userId, prompt, goal);
             responseBody.put("message", response);
-            return ResponseEntity.ok(responseBody);
+
         } else {
-            // It's an activity object processing request
+            // ── Activity object processing ────────────────────────────────
             Activity activity = new Activity();
             if (requestBody.containsKey("id"))
                 activity.setId((String) requestBody.get("id"));
@@ -53,10 +85,34 @@ public class RecommendationController {
                 activity.setCaloriesBurned(Integer.parseInt(requestBody.get("caloriesBurned").toString()));
 
             activityMessageListener.processActivity(activity);
-
-            Map<String, String> responseBody = new HashMap<>();
             responseBody.put("message", "Activity processing started");
-            return ResponseEntity.ok(responseBody);
         }
+
+        return ResponseEntity.ok(responseBody);
+    }
+
+    /**
+     * Clear conversation history for a user.
+     */
+    @DeleteMapping("/memory/{userId}")
+    public ResponseEntity<Map<String, String>> clearMemory(@PathVariable String userId) {
+        log.info("Resetting conversation memory for user: {}", userId);
+        service.clearChatHistory(userId);
+        return ResponseEntity.ok(Map.of("message", "History cleared"));
+    }
+
+    /**
+     * Health check — proxies to the local Python AI service.
+     */
+    @GetMapping("/health")
+    public ResponseEntity<Map<String, Object>> healthCheck() {
+        boolean aiHealthy = service.isAiServiceHealthy();
+        Map<String, Object> status = new HashMap<>();
+        status.put("aiservice", "up");
+        status.put("localAiModel", aiHealthy ? "up" : "down");
+        status.put("message", aiHealthy
+                ? "Local AI model is running on port 8085"
+                : "Local AI model is NOT running — start ai_model/main.py");
+        return ResponseEntity.ok(status);
     }
 }

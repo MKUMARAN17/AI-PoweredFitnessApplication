@@ -7,14 +7,14 @@ export default {
     theme: {
         extend: {
             colors: {
-                primary: "#8B5CF6",
-                secondary: "#EC4899",
-                accent: "#10B981",
-                background: "#0F172A",
-                surface: "#1E293B",
-                "surface-hover": "#334155",
-                text: "#F8FAFC",
-                "text-muted": "#94A3B8",
+                primary: "#0EA5E9",
+                secondary: "#22D3EE",
+                accent: "#38BDF8",
+                background: "#0D1117",
+                surface: "#161B22",
+                "surface-hover": "#1F2937",
+                text: "#F0F6FC",
+                "text-muted": "#8B949E",
             },
             fontFamily: {
                 heading: ['Outfit', 'sans-serif'],
