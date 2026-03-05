@@ -53,3 +53,15 @@ target/failsafe-reports/
 # Temporary files
 tmp/
 temp/
+
+# Gradle
+.gradle/
+
+# Logs and debug files
+gitlog.txt
+gitlog-utf8.txt
+git_status_debug.txt
+git_status_full.txt
+
+# Sensitive files
+login.json
